@@ -1,5 +1,5 @@
 import {ChatGoogleGenerativeAI, GoogleGenerativeAIEmbeddings } from "@langchain/google-genai"
-import {StructuredOutputParser} from "@langchain/core/output_parsers"
+import { StructuredOutputParser } from "@langchain/core/output_parsers"
 import {MongoClient} from "mongodb"
 import {MongoDBAtlasVectorSearch} from "@langchain/mongodb"
 import {z} from "zod"
@@ -30,12 +30,14 @@ const itemSchema = z.object({
     sale_price: z.number(),
   }),
   categories: z.array(z.string()),
-  user_reviews: z.array(
-    z.object({
+  user_reviews: z.array(z.object({
       review_date: z.string(),
       rating: z.number(),
       comment: z.string(),
-    })
-  ),
+    })),
   notes: z.string()
 })
+
+type Item = z.infer<typeof itemSchema>
+const parser = StructuredOutputParser.fromZodSchema(z.array(itemSchema))
+
