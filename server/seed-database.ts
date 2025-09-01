@@ -4,6 +4,7 @@ import {MongoClient} from "mongodb"
 import {MongoDBAtlasVectorSearch} from "@langchain/mongodb"
 import {z} from "zod"
 import 'dotenv/config'
+import { resolve } from "path"
 
 const client = new MongoClient(process.env.MONGODB_ATLAS_URI as string)
 
@@ -103,5 +104,26 @@ async function generateSyntheticData(): Promise<Item[]> {
 
   const response = await llm.invoke(prompt)
   return parser.parse(response.content as string)
+}
+
+async function createItemSummary(item: Item): Promise<string> {
+  return new Promise((resolve) => {
+    const manufacturerDetails = `Made in ${item.manufacturer_address.country}`
+    const categories = item.categories.join(", ")
+    const userReviews = item.user_reviews.map((review) => {
+      `Rated ${review.rating} on ${review.review_date}: ${review.comment}`
+    }).join(" ")
+
+    const basicInfo = `${item.item_name} ${item.item_description} from brand ${item.brand}`
+    const price = `At full price it costs: ${item.prices.full_price} USD, 
+    On sale it costs: ${item.prices.sale_price} USD`
+    const notes = item.notes
+
+    const summary = `${basicInfo}. Manufacturer: ${manufacturerDetails}. 
+    Categories: ${categories}. Reviews: ${userReviews}. Price: ${price}. 
+    Notes: ${notes}`
+
+    resolve(summary)
+  })
 }
 
