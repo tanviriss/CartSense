@@ -45,5 +45,48 @@ const itemSchema = z.object({
   notes: z.string()
 });
 
-const parser = StructuredOutputParser.fromZodSchema(itemSchema);
+const parser = StructuredOutputParser.fromZodSchema(z.array(itemSchema));
+
+async function setupDatabaseAndCollection(): Promise<void> {
+  console.log("Setting up database and collection")
+
+  const db = client.db("inventory_database")
+  const collections = await db.listCollections({name: "items"}).toArray()
+
+  if(collections.length === 0) {
+    await db.createCollection('items')
+    console.log("created 'items' collection in 'inventory_database' database")
+
+  } else {
+    console.log("'items' collections already exists in the 'inventory_database' database")
+  }
+}
+
+async function createVectorSearchIndex(): Promise<void> {
+  try {
+    const db = client.db("inventory_database")
+    const collection = db.collection('items')
+    await collection.dropIndexes()
+
+    const vectorSearchIdx = {
+      name: "vector_index",
+      type: "vectorSearch",
+      definition: {
+        fields: [
+          {
+            "type": "vector",
+            "path": "embedding",
+            "numDimensions": 768,
+            "similarity": "cosine"
+          }
+        ]
+      }
+    }
+    console.log("Creating vector search index")
+    await collection.createSearchIndex(vectorSearchIdx)
+    console.log("successfully created vector search index")
+  } catch(error) {
+    console.log('Failed to create vector search index:', error)
+  }
+}
 
