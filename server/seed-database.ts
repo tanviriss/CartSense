@@ -177,3 +177,5 @@ async function seedDatabase(): Promise<void> {
     await client.close()
   }
 }
+
+seedDatabase().catch(console.error)
