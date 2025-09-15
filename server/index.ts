@@ -3,7 +3,6 @@ import express, {Response, Request, Express} from 'express'
 import {MongoClient} from 'mongodb'
 import {callAgent} from './agent'
 import cors from 'cors'
-import { threadCpuUsage } from 'process'
 
 const app: Express = express()
 
@@ -36,7 +35,7 @@ async function startServer() {
       }
     })
 
-    app.post('/chat:threadId', async (req: Request, res: Response) => {
+    app.post('/chat/:threadId', async (req: Request, res: Response) => {
       const { threadId } = req.params
       const { message } = req.body
       try {
