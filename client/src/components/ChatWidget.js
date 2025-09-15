@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef } from "react";
 // Import Font Awesome icons for the chat interface
 import { FaRobot, FaPaperPlane, FaTimes, FaCommentDots } from "react-icons/fa";
+import ReactMarkdown from "react-markdown";
 
 // Main chat widget component
 const ChatWidget = () => {
@@ -152,7 +153,7 @@ const ChatWidget = () => {
                   }`}
                 >
                   {/* Display message text */}
-                  {message.text}
+                  <ReactMarkdown>{message.text}</ReactMarkdown>
                 </div>
               </div>
             ))}
