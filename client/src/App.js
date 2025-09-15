@@ -1,6 +1,6 @@
 import React from "react";
 import "./App.css";
-import EcommerceStore from "./components/EcommerceStore";
+import EcommerceStore from "./components/EcommerseStore";
 
 function App() {
   return (
