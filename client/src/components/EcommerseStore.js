@@ -62,11 +62,61 @@ const EcommerceStore = () => {
       <main>
         <div className="hero">
           <div className="container">
-            <h1>Summer Sale is Live!</h1>
-            <p>Get up to 50% off on selected items. Limited time offer.</p>
-            <button>Shop Now</button>
+            <h1>Welcome to ShopSmart</h1>
+            <p>
+              Discover premium furniture and home decor with AI-powered shopping
+              assistance
+            </p>
+            <button>Explore Collection</button>
           </div>
         </div>
+
+        <section className="featured-products">
+          <div className="container">
+            <h2>Featured Products</h2>
+            <div className="products-grid">
+              <div className="product-card">
+                <div className="product-image">🛋️</div>
+                <h3>Modern Sofa</h3>
+                <p>Comfortable and stylish sofa with plush cushions</p>
+                <div className="price">
+                  $999 <span className="original-price">$1,200</span>
+                </div>
+                <button className="add-to-cart">Add to Cart</button>
+              </div>
+
+              <div className="product-card">
+                <div className="product-image">🛏️</div>
+                <h3>Queen Bed Frame</h3>
+                <p>Sleek and modern queen bed frame</p>
+                <div className="price">
+                  $400 <span className="original-price">$500</span>
+                </div>
+                <button className="add-to-cart">Add to Cart</button>
+              </div>
+
+              <div className="product-card">
+                <div className="product-image">🍽️</div>
+                <h3>Oak Dining Table</h3>
+                <p>Solid oak dining table with six chairs</p>
+                <div className="price">
+                  $700 <span className="original-price">$800</span>
+                </div>
+                <button className="add-to-cart">Add to Cart</button>
+              </div>
+
+              <div className="product-card">
+                <div className="product-image">📺</div>
+                <h3>TV Stand</h3>
+                <p>Modern TV stand with storage</p>
+                <div className="price">
+                  $300 <span className="original-price">$350</span>
+                </div>
+                <button className="add-to-cart">Add to Cart</button>
+              </div>
+            </div>
+          </div>
+        </section>
       </main>
 
       <footer className="footer">
