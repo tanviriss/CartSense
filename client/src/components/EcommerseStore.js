@@ -1,6 +1,87 @@
 import { FaSearch, FaShoppingCart, FaUser, FaHeart } from "react-icons/fa";
 import ChatWidget from "./ChatWidget";
+import { useState, useEffect } from "react";
+
 const EcommerceStore = () => {
+  const [activeCategory, setActiveCategory] = useState("Home");
+  const [products, setProducts] = useState({});
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  const fetchProducts = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch("http://localhost:8000/products");
+      if (response.ok) {
+        const data = await response.json();
+        setProducts(data);
+      } else {
+        console.error("Failed to fetch products");
+        setProducts(getDefaultProducts());
+      }
+    } catch (error) {
+      console.error("Error fetching products:", error);
+      setProducts(getDefaultProducts());
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getDefaultProducts = () => ({
+    Home: [
+      {
+        id: 1,
+        name: "Modern Sofa",
+        description: "Comfortable and stylish sofa with plush cushions",
+        price: 999,
+        originalPrice: 1200,
+        emoji: "🛋️",
+        category: "Living Room",
+      },
+      {
+        id: 2,
+        name: "Oak Dining Table",
+        description: "Solid oak dining table with six chairs",
+        price: 700,
+        originalPrice: 800,
+        emoji: "🍽️",
+        category: "Dining Room",
+      },
+      {
+        id: 3,
+        name: "TV Stand",
+        description: "Modern TV stand with storage",
+        price: 300,
+        originalPrice: 350,
+        emoji: "📺",
+        category: "Living Room",
+      },
+      {
+        id: 4,
+        name: "Coffee Table",
+        description: "Glass top coffee table with wooden legs",
+        price: 250,
+        originalPrice: 300,
+        emoji: "☕",
+        category: "Living Room",
+      },
+    ],
+    Electronics: [],
+    Clothing: [],
+    "Home & Kitchen": [],
+    Beauty: [],
+    Sports: [],
+    Deals: [],
+  });
+
+  const handleCategoryClick = (category) => {
+    setActiveCategory(category);
+  };
+
+  const currentProducts = products[activeCategory] || products["Home"];
   return (
     <>
       <header className="header">
@@ -32,27 +113,90 @@ const EcommerceStore = () => {
           <nav className="nav-bar">
             <ul>
               <li>
-                <a href="#" className="active">
+                <a
+                  href="#"
+                  className={activeCategory === "Home" ? "active" : ""}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleCategoryClick("Home");
+                  }}
+                >
                   Home
                 </a>
               </li>
               <li>
-                <a href="#">Electronics</a>
+                <a
+                  href="#"
+                  className={activeCategory === "Electronics" ? "active" : ""}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleCategoryClick("Electronics");
+                  }}
+                >
+                  Electronics
+                </a>
               </li>
               <li>
-                <a href="#">Clothing</a>
+                <a
+                  href="#"
+                  className={activeCategory === "Clothing" ? "active" : ""}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleCategoryClick("Clothing");
+                  }}
+                >
+                  Clothing
+                </a>
               </li>
               <li>
-                <a href="#">Home & Kitchen</a>
+                <a
+                  href="#"
+                  className={
+                    activeCategory === "Home & Kitchen" ? "active" : ""
+                  }
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleCategoryClick("Home & Kitchen");
+                  }}
+                >
+                  Home & Kitchen
+                </a>
               </li>
               <li>
-                <a href="#">Beauty</a>
+                <a
+                  href="#"
+                  className={activeCategory === "Beauty" ? "active" : ""}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleCategoryClick("Beauty");
+                  }}
+                >
+                  Beauty
+                </a>
               </li>
               <li>
-                <a href="#">Sports</a>
+                <a
+                  href="#"
+                  className={activeCategory === "Sports" ? "active" : ""}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleCategoryClick("Sports");
+                  }}
+                >
+                  Sports
+                </a>
               </li>
               <li>
-                <a href="#">Deals</a>
+                <a
+                  href="#"
+                  className={activeCategory === "Deals" ? "active" : ""}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleCategoryClick("Deals");
+                  }}
+                >
+                  Deals
+                </a>
               </li>
             </ul>
           </nav>
@@ -73,48 +217,42 @@ const EcommerceStore = () => {
 
         <section className="featured-products">
           <div className="container">
-            <h2>Featured Products</h2>
-            <div className="products-grid">
-              <div className="product-card">
-                <div className="product-image">🛋️</div>
-                <h3>Modern Sofa</h3>
-                <p>Comfortable and stylish sofa with plush cushions</p>
-                <div className="price">
-                  $999 <span className="original-price">$1,200</span>
-                </div>
-                <button className="add-to-cart">Add to Cart</button>
+            <h2>
+              {activeCategory === "Home"
+                ? "Featured Products"
+                : `${activeCategory} Products`}
+            </h2>
+            {loading ? (
+              <div className="loading-container">
+                <div className="loading-spinner"></div>
+                <p>Loading products...</p>
               </div>
-
-              <div className="product-card">
-                <div className="product-image">🛏️</div>
-                <h3>Queen Bed Frame</h3>
-                <p>Sleek and modern queen bed frame</p>
-                <div className="price">
-                  $400 <span className="original-price">$500</span>
-                </div>
-                <button className="add-to-cart">Add to Cart</button>
+            ) : (
+              <div className="products-grid">
+                {currentProducts.length > 0 ? (
+                  currentProducts.map((product) => (
+                    <div key={product.id} className="product-card">
+                      <div className="product-image">
+                        {product.emoji || "📦"}
+                      </div>
+                      <h3>{product.name}</h3>
+                      <p>{product.description}</p>
+                      <div className="price">
+                        ${product.price}{" "}
+                        <span className="original-price">
+                          ${product.originalPrice}
+                        </span>
+                      </div>
+                      <button className="add-to-cart">Add to Cart</button>
+                    </div>
+                  ))
+                ) : (
+                  <div className="no-products">
+                    <p>No products found in this category.</p>
+                  </div>
+                )}
               </div>
-
-              <div className="product-card">
-                <div className="product-image">🍽️</div>
-                <h3>Oak Dining Table</h3>
-                <p>Solid oak dining table with six chairs</p>
-                <div className="price">
-                  $700 <span className="original-price">$800</span>
-                </div>
-                <button className="add-to-cart">Add to Cart</button>
-              </div>
-
-              <div className="product-card">
-                <div className="product-image">📺</div>
-                <h3>TV Stand</h3>
-                <p>Modern TV stand with storage</p>
-                <div className="price">
-                  $300 <span className="original-price">$350</span>
-                </div>
-                <button className="add-to-cart">Add to Cart</button>
-              </div>
-            </div>
+            )}
           </div>
         </section>
       </main>
